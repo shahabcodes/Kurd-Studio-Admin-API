@@ -9,5 +9,6 @@ public interface IWritingRepository
     Task<int> CreateAsync(Writing writing);
     Task UpdateAsync(Writing writing);
     Task DeleteAsync(int id);
+    Task DeleteBatchAsync(IEnumerable<int> ids);
     Task<IEnumerable<WritingType>> GetTypesAsync();
 }

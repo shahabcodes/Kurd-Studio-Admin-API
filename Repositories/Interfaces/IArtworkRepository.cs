@@ -9,5 +9,6 @@ public interface IArtworkRepository
     Task<int> CreateAsync(Artwork artwork);
     Task UpdateAsync(Artwork artwork);
     Task DeleteAsync(int id);
+    Task DeleteBatchAsync(IEnumerable<int> ids);
     Task<IEnumerable<ArtworkType>> GetTypesAsync();
 }

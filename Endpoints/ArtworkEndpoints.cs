@@ -17,6 +17,7 @@ public static class ArtworkEndpoints
         artworks.MapPost("/", Create).WithName("AdminCreateArtwork");
         artworks.MapPut("/{id:int}", Update).WithName("AdminUpdateArtwork");
         artworks.MapDelete("/{id:int}", Delete).WithName("AdminDeleteArtwork");
+        artworks.MapDelete("/batch", DeleteBatch).WithName("AdminDeleteArtworkBatch");
 
         return group;
     }
@@ -109,5 +110,14 @@ public static class ArtworkEndpoints
 
         await repository.DeleteAsync(id);
         return Results.Ok(new { Message = "Deleted" });
+    }
+
+    private static async Task<IResult> DeleteBatch(BatchDeleteRequest request, IArtworkRepository repository)
+    {
+        if (request.Ids == null || !request.Ids.Any())
+            return Results.BadRequest(new { Message = "No IDs provided" });
+
+        await repository.DeleteBatchAsync(request.Ids);
+        return Results.Ok(new { Message = $"Deleted {request.Ids.Count()} items" });
     }
 }

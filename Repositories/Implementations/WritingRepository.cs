@@ -90,6 +90,14 @@ public class WritingRepository : IWritingRepository
         );
     }
 
+    public async Task DeleteBatchAsync(IEnumerable<int> ids)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        await connection.ExecuteAsync(
+            "DELETE FROM Writings WHERE Id IN @Ids",
+            new { Ids = ids });
+    }
+
     public async Task<IEnumerable<WritingType>> GetTypesAsync()
     {
         using var connection = _connectionFactory.CreateConnection();

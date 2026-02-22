@@ -17,6 +17,7 @@ public static class WritingEndpoints
         writings.MapPost("/", Create).WithName("AdminCreateWriting");
         writings.MapPut("/{id:int}", Update).WithName("AdminUpdateWriting");
         writings.MapDelete("/{id:int}", Delete).WithName("AdminDeleteWriting");
+        writings.MapDelete("/batch", DeleteBatch).WithName("AdminDeleteWritingBatch");
 
         return group;
     }
@@ -115,5 +116,14 @@ public static class WritingEndpoints
 
         await repository.DeleteAsync(id);
         return Results.Ok(new { Message = "Deleted" });
+    }
+
+    private static async Task<IResult> DeleteBatch(BatchDeleteRequest request, IWritingRepository repository)
+    {
+        if (request.Ids == null || !request.Ids.Any())
+            return Results.BadRequest(new { Message = "No IDs provided" });
+
+        await repository.DeleteBatchAsync(request.Ids);
+        return Results.Ok(new { Message = $"Deleted {request.Ids.Count()} items" });
     }
 }

@@ -84,6 +84,14 @@ public class ArtworkRepository : IArtworkRepository
         );
     }
 
+    public async Task DeleteBatchAsync(IEnumerable<int> ids)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        await connection.ExecuteAsync(
+            "DELETE FROM Artworks WHERE Id IN @Ids",
+            new { Ids = ids });
+    }
+
     public async Task<IEnumerable<ArtworkType>> GetTypesAsync()
     {
         using var connection = _connectionFactory.CreateConnection();
