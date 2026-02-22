@@ -5,15 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services
 builder.Services.AddApplicationServices();
 builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddCorsPolicy();
+builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Kurd Studio Admin API", Version = "v1" });
 });
-
-// Configure Kestrel port
-builder.WebHost.UseUrls("http://localhost:5001");
 
 var app = builder.Build();
 
