@@ -2,6 +2,7 @@ using FluentValidation;
 using KurdStudio.AdminApi.Models.DTOs;
 using KurdStudio.AdminApi.Models.Shared;
 using KurdStudio.AdminApi.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KurdStudio.AdminApi.Endpoints;
 
@@ -118,7 +119,7 @@ public static class WritingEndpoints
         return Results.Ok(new { Message = "Deleted" });
     }
 
-    private static async Task<IResult> DeleteBatch(BatchDeleteRequest request, IWritingRepository repository)
+    private static async Task<IResult> DeleteBatch([FromBody] BatchDeleteRequest request, IWritingRepository repository)
     {
         if (request.Ids == null || !request.Ids.Any())
             return Results.BadRequest(new { Message = "No IDs provided" });
