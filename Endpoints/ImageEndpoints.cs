@@ -1,6 +1,7 @@
 using KurdStudio.AdminApi.Models.DTOs;
 using KurdStudio.AdminApi.Models.Shared;
 using KurdStudio.AdminApi.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using SkiaSharp;
 
 namespace KurdStudio.AdminApi.Endpoints;
@@ -17,6 +18,7 @@ public static class ImageEndpoints
         images.MapPost("/upload", Upload).WithName("AdminUploadImage").DisableAntiforgery();
         images.MapPut("/{id:int}", UpdateMeta).WithName("AdminUpdateImageMeta");
         images.MapDelete("/{id:int}", Delete).WithName("AdminDeleteImage");
+        images.MapDelete("/batch", DeleteBatch).WithName("AdminDeleteImageBatch");
 
         return group;
     }
@@ -147,6 +149,15 @@ public static class ImageEndpoints
         {
             return Results.BadRequest(new { Error = ex.Message });
         }
+    }
+
+    private static async Task<IResult> DeleteBatch([FromBody] BatchDeleteRequest request, IImageRepository repository)
+    {
+        if (request.Ids == null || !request.Ids.Any())
+            return Results.BadRequest(new { Message = "No IDs provided" });
+
+        await repository.DeleteBatchAsync(request.Ids);
+        return Results.Ok(new { Message = $"Deleted {request.Ids.Count()} items" });
     }
 }
 

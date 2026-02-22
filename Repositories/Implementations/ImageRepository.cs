@@ -93,4 +93,12 @@ public class ImageRepository : IImageRepository
             commandType: CommandType.StoredProcedure
         );
     }
+
+    public async Task DeleteBatchAsync(IEnumerable<int> ids)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        await connection.ExecuteAsync(
+            "DELETE FROM Images WHERE Id IN @Ids",
+            new { Ids = ids });
+    }
 }

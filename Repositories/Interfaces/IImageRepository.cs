@@ -11,4 +11,5 @@ public interface IImageRepository
     Task<int> UploadAsync(Image image);
     Task UpdateMetaAsync(int id, string fileName, string? altText);
     Task DeleteAsync(int id);
+    Task DeleteBatchAsync(IEnumerable<int> ids);
 }
